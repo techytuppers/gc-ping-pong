@@ -12,35 +12,33 @@ const Wrapper = styled.div`
 class GenerateTournament extends React.Component {
   constructor() {
     super();
-    this.state = { pairs: [] }
-  }
-
-  componentDidMount() {
-    var usersRef = firebase.database().ref('users/');
-    usersRef.once('value')
-      .then(snapshot => this.getMatches(snapshot))
-      .then(pairs => {
-        this.setState({ pairs: pairs })
-      });
+    // this.state = { pairs: [] }
+    this.database = firebase.database()
+    this.generateTournament = this.generateTournament.bind(this)
   }
 
   generateTournament(event) {
     event.preventDefault();
-    // const newTournamentRef = this.database.ref('matches/').push();
-
-    // this.state.pairs.forEach(element => console.log(element));
-
-    // newTournamentRef.set({
-    //   player1: this.state.player1,
-    //   player2: this.state.player2,
-    // });
+    var usersRef = this.database.ref('users/');
+    // var that = this;
+    usersRef.once('value')
+      .then(snapshot => this.getMatches(snapshot))
+      .then(pairs => {
+        this.database.ref('matches/').remove();
+        pairs.forEach(pair => {
+          const newTournamentRef = this.database.ref('matches/').push();
+          newTournamentRef.set({
+            player1: pair.player1,
+            player2: pair.player2,
+          });
+        });
+      });
+    
   }
 
   getMatches(snapshot) {
     const users = snapshot.val();
     const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
-    // console.log('names', names)
-    // console.log('no of name', names.length)
 
     if (names.length % 2 !== 0) {
       // alert("You must have an even number of names. You currently have " + names.length + " names.");
@@ -50,8 +48,8 @@ class GenerateTournament extends React.Component {
 
       var pairs = []
       while (names.length) {
-        var name1 = names.pop(), // get the last value of names
-          name2 = names.shift(); // get the first value of names
+        var name1 = names.pop(); // get the last value of names
+        var name2 = names.pop(); // get the first value of names
         pairs.push(
           {
             player1: name1,

@@ -3,11 +3,13 @@ import * as firebase from 'firebase';
 
 class DisplayMatch extends React.Component {
     constructor(props){
-        super();
+        super(props);
         this.state = {
-            player1Score:0,
-            player2Score:0,
+            player1Score: props.match.player1Score,
+            player2Score: props.match.player2Score,
+            alreadyScored: props.match.alreadyScored
         }
+        this.matchId = props.match.matchId;
         this.database = firebase.database();
         this.handlePlayer1ScoreChange = this.handlePlayer1ScoreChange.bind(this);
         this.handlePlayer2ScoreChange = this.handlePlayer2ScoreChange.bind(this);
@@ -20,16 +22,13 @@ class DisplayMatch extends React.Component {
 
     submitScore(event) {
         event.preventDefault();
-        console.log('hello')
-        const newMatchRef = this.database.ref('matches/').push();
-        newMatchRef.set({
-            player1: this.props.pair.player1,
+        const matchRef = this.database.ref('matches/' + this.matchId);
+        matchRef.set({
             player1Score: this.state.player1Score,
-            player2: this.props.pair.player2,
             player2Score: this.state.player2Score,
             week: 1
         }).then(() => {
-            this.setState({ success: true });
+            this.setState({ alreadyScored: true });
 
             // debugger;
         })
@@ -46,7 +45,8 @@ class DisplayMatch extends React.Component {
 
 
     render(props) {
-        // console.log('displaymatch pair ', this.props.pair)
+        console.log('props ', props)
+        console.log('this.props ', this.props)
         return (
             <div>
                 <form>
@@ -61,13 +61,15 @@ class DisplayMatch extends React.Component {
                         <tbody>
                             <tr>
                                 <td>Player 1</td>
-                                <td>{this.props.pair.player1}</td>
-                                <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange}></input></td>
+                                <td>{this.props.match.player1}</td>
+                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange} disabled ></input></td> :
+                                <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange}></input></td>}
                             </tr>
                             <tr>
                                 <td>Player 2</td>
-                                <td>{this.props.pair.player2}</td>
-                                <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange}></input></td>
+                                <td>{this.props.match.player2}</td>
+                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange} disabled></input></td> :
+                                <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange}></input></td>}
                             </tr>
                         </tbody>
                         

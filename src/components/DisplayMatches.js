@@ -6,12 +6,24 @@ class DisplayMatches extends React.Component {
         super();
     }
     render() {
-        console.log("this.props ", this.props)
+        console.log("jenny ", this.props.matches)
 
-        const pairComponents = this.props.pairs.map(pair => <DisplayMatch pair={pair}/>)
+        const matchComponents = Object.entries(this.props.matches).map((key, value) => {
+            const match = {
+                matchId : key[0],
+                player1 : key[1].player1,
+                player2 : key[1].player2,
+                player1Score : key[1].player1Score,
+                player2Score : key[1].player2Score,
+                alreadyScored : key[1].player1Score && key[1].player1Score
+
+            }
+            console.log("match ", match)
+            return <DisplayMatch match={match}/>
+        })
         return (
             <div>
-                {pairComponents}
+                {matchComponents}
             </div>
         );
     }
