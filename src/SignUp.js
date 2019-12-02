@@ -5,35 +5,41 @@ class SignUp extends React.Component {
 
     constructor() {
         super()
-        var firebaseConfig = {
-            apiKey: "AIzaSyCsBt8FtmgRwYPC-aXsvuZoLBRGu8bN8nk",
-            authDomain: "gc-ping-pong.firebaseapp.com",
-            databaseURL: "https://gc-ping-pong.firebaseio.com",
-            projectId: "gc-ping-pong",
-            storageBucket: "gc-ping-pong.appspot.com",
-            messagingSenderId: "301659271768",
-            appId: "1:301659271768:web:2888ac87cbf0cb8809102d"
-          };
-          // Initialize Firebase
-        var app = firebase.initializeApp(firebaseConfig);
+        this.state = {firstName: '', surname: ''};
         this.database = firebase.database();
         this.addUser = this.addUser.bind(this);
+        this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
+        this.handleSurnameChange = this.handleSurnameChange.bind(this);
 
     }
 
     addUser() {
         console.log('hi')
-        this.database.ref('users/1234').set({
-            username: 'test',
-        });
+        const newUserRef = this.database.ref('users/').push();
+        newUserRef.set({
+            firstName: this.state.firstName,
+            surname: this.state.surname,
+        }).then(res=> console.log("test", res));
     }
+    
+    handleFirstNameChange(event) {
+        this.setState({firstName: event.target.value});
+    }
+
+    handleSurnameChange(event) {
+        this.setState({surname: event.target.value});
+    }
+
+
 
 
     render() {
         return (
-            <button className="SignUp" onClick={this.addUser}>
-              Sign Up
-            </button>
+            <form className="SignUp" onSubmit={this.addUser}>
+                <input type="text" placeholder="Firstname" value={this.state.firstName} onChange={this.handleFirstNameChange}></input>
+                <input type="text" placeholder="Lastname" value={this.state.surname} onChange={this.handleSurnameChange}></input>
+                <button type="submit">Sign Up</button>
+            </form>
         );
     }
   }
