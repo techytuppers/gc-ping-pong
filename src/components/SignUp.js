@@ -5,7 +5,7 @@ class SignUp extends React.Component {
 
     constructor() {
         super()
-        this.state = { firstName: '', surname: '' };
+        this.state = { firstName: '', surname: '', success: false };
         this.database = firebase.database();
         this.addUser = this.addUser.bind(this);
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
@@ -20,10 +20,14 @@ class SignUp extends React.Component {
             firstName: this.state.firstName,
             surname: this.state.surname,
         }).then(() => {
-            debugger;
+            this.setState({ success: true });
+
+            // debugger;
         })
             .catch((error) => {
-                debugger;
+                this.setState({ success: false });
+
+                // debugger;
             })
     }
 
@@ -38,11 +42,13 @@ class SignUp extends React.Component {
 
     render() {
         return (
+            this.state.success ? <div>You've signed up</div> :
             <form className="SignUp" onSubmit={this.addUser}>
                 <input type="text" placeholder="Firstname" value={this.state.firstName} onChange={this.handleFirstNameChange}></input>
                 <input type="text" placeholder="Lastname" value={this.state.surname} onChange={this.handleSurnameChange}></input>
                 <button type="submit">Sign Up</button>
             </form>
+            
         );
     }
 }
