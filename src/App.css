@@ -1,22 +1,79 @@
-.App {
-  text-align: center;
+:root {
+  --color-primary: rgb(8, 84, 179);
+  --color-cta: #00a87e;
+  --color-cta-hover: rgb(0, 188, 141);
+  --color-white: #FFFFFF;
 }
 
-.App-logo {
-  height: 40vmin;
+/* Base */
+
+body,
+input,
+select,
+textarea,
+button {
+  font-size: 16px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Navigation */
+
+.mainNavigation {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background: var(--color-primary);
+  margin: 0;
+}
+
+.mainNavigation__item {
+  margin: 10px;
+}
+
+.mainNavigation__link {
+  padding: 10px;
+  background-color: var(--color-cta);
+  color: var(--color-white);
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.mainNavigation__link:hover {
+  background-color: var(--color-cta-hover);
+}
+
+/* Layout */
+
+.mainContainer {
+  margin: 20px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Button */
+
+.button {
+  color: var(--color-white);
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+.button--primary {
+  background: var(--color-cta);
+}
+
+/* Form */
+
+.form {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.App-link {
-  color: #09d3ac;
+.form label {
+  padding-bottom: 5px;
 }
