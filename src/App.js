@@ -14,17 +14,20 @@ export default function App() {
     <Router>
       <div>
         <Navigation />
-        <Switch>
-          <Route path="/matches-results">
-            <MatchesResults />
-          </Route>
-          <Route path="/sign-up">
-            <SignUp />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <main className="mainContainer">
+          <Switch>
+            <Route path="/matches-results">
+              <MatchesResults />
+            </Route>
+            <Route path="/sign-up">
+              <SignUp />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </main>
+
       </div>
     </Router>
   );

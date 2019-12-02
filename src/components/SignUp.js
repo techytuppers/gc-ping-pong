@@ -1,5 +1,19 @@
 import React from 'react';
 import * as firebase from 'firebase';
+import styled from 'styled-components';
+
+const FormInput = styled.input`
+    background-color: #fff;
+    border: 1px solid;
+    border-color: var(--color-primary);
+    border-radius: 4px;
+    color: #2c2d2f;
+    display: block;
+    margin-bottom: 18px;
+    padding: 9px;
+    transition: border-color .2s ease;
+    font-size: 16px;
+`;
 
 class SignUp extends React.Component {
 
@@ -13,6 +27,7 @@ class SignUp extends React.Component {
     }
 
     addUser(event) {
+
         event.preventDefault();
         console.log('hi')
         const newUserRef = this.database.ref('users/').push();
@@ -42,13 +57,18 @@ class SignUp extends React.Component {
 
     render() {
         return (
-            this.state.success ? <div>You've signed up</div> :
-            <form className="SignUp" onSubmit={this.addUser}>
-                <input type="text" placeholder="Firstname" value={this.state.firstName} onChange={this.handleFirstNameChange}></input>
-                <input type="text" placeholder="Lastname" value={this.state.surname} onChange={this.handleSurnameChange}></input>
-                <button type="submit">Sign Up</button>
-            </form>
-            
+            <div>
+                <h1>Fill in your name to join the next Ping Pong Tournament!</h1>
+                {this.state.success ? <div>You've signed up</div> :
+                <form className="form" onSubmit={this.addUser}>
+                    <label for="firstName">First name</label>
+                    <FormInput id="firstName" type="text" value={this.state.firstName} onChange={this.handleFirstNameChange}></FormInput>
+                    <label for="lastName">Last name</label>
+                    <FormInput id="lastName" type="text" value={this.state.surname} onChange={this.handleSurnameChange}></FormInput>
+                    <button className="button button--primary" type="submit">Join the Tournament</button>
+                </form>}
+            </div>
+
         );
     }
 }

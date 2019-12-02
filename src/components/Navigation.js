@@ -7,15 +7,21 @@ class Navigation extends React.Component {
     render() {
         return (
             <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
+                <ul className="mainNavigation">
+                    <li className="mainNavigation__item">
+                        <Link to="/" className="mainNavigation__link">
+                            Home
+                        </Link>
                     </li>
-                    <li>
-                        <Link to="/sign-up">Signup</Link>
+                    <li className="mainNavigation__item">
+                        <Link to="/sign-up" className="mainNavigation__link">
+                            Join!
+                        </Link>
                     </li>
-                    <li>
-                        <Link to="/matches-results">Matches and Results</Link>
+                    <li className="mainNavigation__item">
+                        <Link to="/matches-results" className="mainNavigation__link">
+                            Matches and Results
+                        </Link>
                     </li>
                 </ul>
             </nav>
