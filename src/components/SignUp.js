@@ -19,11 +19,18 @@ class SignUp extends React.Component {
 
     constructor() {
         super()
-        this.state = { firstName: '', surname: '', success: false };
+        this.state = { firstName: '', surname: '', success: false, playerCount: 0 };
         this.database = firebase.database();
         this.addUser = this.addUser.bind(this);
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
         this.handleSurnameChange = this.handleSurnameChange.bind(this);
+    }
+
+    componentDidMount() {
+        var usersRef = firebase.database().ref('users/');
+        usersRef.once('value')
+            .then(snapshot=> Object.keys(snapshot.val()).length)
+            .then(playerCount=> this.setState({playerCount: playerCount}))
     }
 
     addUser(event) {
@@ -35,7 +42,7 @@ class SignUp extends React.Component {
             firstName: this.state.firstName,
             surname: this.state.surname,
         }).then(() => {
-            this.setState({ success: true });
+            this.setState({ success: true, playerCount: this.state.playerCount + 1 });
 
             // debugger;
         })
@@ -56,10 +63,19 @@ class SignUp extends React.Component {
 
 
     render() {
+        const maxPlayers = 32;
+        const playerCount = this.state.playerCount;
+        const tournamentFull = this.state.playerCount >= maxPlayers;
         return (
             <div>
                 <h1>Fill in your name to join the next Ping Pong Tournament!</h1>
+                <div>Current no of Players: {playerCount}</div>
+                {tournamentFull ? 
+                    <div>Tournament FULL!</div>
+                    : <div>Players Still Needed: {maxPlayers - playerCount}</div>}
+                
                 {this.state.success ? <div>You've signed up</div> :
+                !tournamentFull &&
                 <form className="form" onSubmit={this.addUser}>
                     <label for="firstName">First name</label>
                     <FormInput id="firstName" type="text" value={this.state.firstName} onChange={this.handleFirstNameChange}></FormInput>
