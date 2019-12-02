@@ -6,52 +6,44 @@ class MatchesResults extends React.Component {
 
     constructor() {
         super();
-        this.state = {pairs: []}
+        this.state = { pairs: [] }
     }
 
     componentDidMount() {
         var usersRef = firebase.database().ref('users/');
         usersRef.once('value')
-            .then(snapshot=> this.getMatches(snapshot))
-            .then(pairs=>{
-                this.setState({pairs: pairs})
-            });    
+            .then(snapshot => this.getMatches(snapshot))
+            .then(pairs => {
+                this.setState({ pairs: pairs })
+            });
     }
 
     getMatches(snapshot) {
-            // console.log('snapshot', snapshot.val());
-    
-            const users = snapshot.val();
-            const names = Object.values(users).map(user=> user.firstName).filter(name => !!name)
-            // console.log('names', names)
-            // console.log('no of name', names.length)
-    
-            if (names.length % 2 != 0) {
-                alert("You must have an even number of names. You currently have " + names.length + " names.");
-            } else {
-    
-                var arr1 = names.slice(), // copy array
-                arr2 = names.slice(); // copy array again
-    
-                arr1.sort(function() { return 0.5 - Math.random();}); // shuffle arrays
-                arr2.sort(function() { return 0.5 - Math.random();});
-                var pairs = []
-                while (arr1.length) {
-                    var name1 = arr1.pop(), // get the last value of arr1
-                        name2 = arr2[0] == name1 ? arr2.pop() : arr2.shift();
-                        //        ^^ if the first value is the same as name1, 
-                        //           get the last value, otherwise get the first
-                    pairs.push(
-                        {
-                            player1 : name1,
-                            player2 : name2
-                        }
-                    )
-                    // console.log(name1 + ' plays ' + name2);
-                }
-                return pairs;
-                // that.setState({pairs: pairs})
+        const users = snapshot.val();
+        const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
+        // console.log('names', names)
+        // console.log('no of name', names.length)
+
+        if (names.length % 2 !== 0) {
+            // alert("You must have an even number of names. You currently have " + names.length + " names.");
+        } else {
+
+            names.sort(function () { return 0.5 - Math.random(); }); // shuffle array
+
+            var pairs = []
+            while (names.length) {
+                var name1 = names.pop(), // get the last value of names
+                    name2 = names.shift(); // get the first value of names
+                pairs.push(
+                    {
+                        player1: name1,
+                        player2: name2
+                    }
+                )
             }
+            console.log(pairs);
+            return pairs;
+        }
     }
 
     render() {
@@ -59,9 +51,9 @@ class MatchesResults extends React.Component {
         return (
             <div>
                 <h1>All Matches and Results</h1>
-                <DisplayMatches pairs={this.state.pairs}/>
+                <DisplayMatches pairs={this.state.pairs} />
             </div>
-            
+
         );
     }
 }
