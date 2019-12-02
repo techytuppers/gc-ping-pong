@@ -1,21 +1,30 @@
 import React from 'react';
 import * as firebase from 'firebase';
-import DisplayMatch from './DisplayMatch';
+import DisplayMatches from './DisplayMatches';
 
 class MatchesResults extends React.Component {
 
     constructor() {
         super();
         this.state = {pairs: []}
+    }
+
+    componentDidMount() {
         var usersRef = firebase.database().ref('users/');
-        var that = this;
-        usersRef.on('value', function(snapshot) {
-            console.log('snapshot', snapshot.val());
+        usersRef.once('value')
+            .then(snapshot=> this.getMatches(snapshot))
+            .then(pairs=>{
+                this.setState({pairs: pairs})
+            });    
+    }
+
+    getMatches(snapshot) {
+            // console.log('snapshot', snapshot.val());
     
             const users = snapshot.val();
             const names = Object.values(users).map(user=> user.firstName).filter(name => !!name)
-            console.log('names', names)
-            console.log('no of name', names.length)
+            // console.log('names', names)
+            // console.log('no of name', names.length)
     
             if (names.length % 2 != 0) {
                 alert("You must have an even number of names. You currently have " + names.length + " names.");
@@ -38,20 +47,19 @@ class MatchesResults extends React.Component {
                             player2 : name2
                         }
                     )
-                    console.log(name1 + ' plays ' + name2);
+                    // console.log(name1 + ' plays ' + name2);
                 }
-                that.setState({pairs: pairs})
+                return pairs;
+                // that.setState({pairs: pairs})
             }
-    
-    
-        });    
     }
+
     render() {
-        console.log("pairs ", this.state.pairs)
+        // console.log("pairs ", this.state.pairs)
         return (
             <div>
                 <h1>All Matches and Results</h1>
-                <DisplayMatch pairs={this.state.pairs}/>
+                <DisplayMatches pairs={this.state.pairs}/>
             </div>
             
         );
