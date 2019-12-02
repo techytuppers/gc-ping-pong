@@ -5,32 +5,35 @@ class SignUp extends React.Component {
 
     constructor() {
         super()
-        this.state = {firstName: '', surname: ''};
+        this.state = { firstName: '', surname: '' };
         this.database = firebase.database();
         this.addUser = this.addUser.bind(this);
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
         this.handleSurnameChange = this.handleSurnameChange.bind(this);
-
     }
 
-    addUser() {
+    addUser(event) {
+        event.preventDefault();
         console.log('hi')
         const newUserRef = this.database.ref('users/').push();
         newUserRef.set({
             firstName: this.state.firstName,
             surname: this.state.surname,
-        }).then(res=> console.log("test", res));
+        }).then(() => {
+            debugger;
+        })
+            .catch((error) => {
+                debugger;
+            })
     }
-    
+
     handleFirstNameChange(event) {
-        this.setState({firstName: event.target.value});
+        this.setState({ firstName: event.target.value });
     }
 
     handleSurnameChange(event) {
-        this.setState({surname: event.target.value});
+        this.setState({ surname: event.target.value });
     }
-
-
 
 
     render() {
@@ -42,8 +45,7 @@ class SignUp extends React.Component {
             </form>
         );
     }
-  }
+}
 
-  
+
 export default SignUp;
-  

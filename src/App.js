@@ -1,16 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 import './App.css';
-import SignUp from './SignUp';
+import Navigation from './components/Navigation';
+import SignUp from './components/SignUp';
+import MatchesResults from './components/MatchesResults';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <SignUp/>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Navigation />
+        <Switch>
+          <Route path="/matches-results">
+            <MatchesResults />
+          </Route>
+          <Route path="/sign-up">
+            <SignUp />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
-export default App;
+function Home() {
+  return <h2>Home</h2>;
+}
