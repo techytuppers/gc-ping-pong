@@ -15,15 +15,35 @@ button {
   font-size: 16px;
 }
 
+h1,h2,h3,h4,h5 {
+  text-align: center;
+}
+
 /* Navigation */
+
+.logo-wrap {
+  padding: 20px;
+  border-radius: 100px;
+  background: white;
+  margin-right: 20px;
+}
+
+.logo-image {
+  height: 100px;
+  width: 100px;
+}
 
 .mainNavigation {
   list-style: none;
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 30px;
   background: var(--color-primary);
   margin: 0;
+}
+
+.mainNavigation li {
+  align-self: center;
 }
 
 .mainNavigation__item {
@@ -41,6 +61,14 @@ button {
 
 .mainNavigation__link:hover {
   background-color: var(--color-cta-hover);
+}
+
+.mainNavigation__link--admin {
+  background-color: #D32F2F
+}
+
+.mainNavigation__link--admin:hover {
+  background-color: #FF5252;
 }
 
 /* Layout */
