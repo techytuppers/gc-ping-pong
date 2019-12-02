@@ -6,59 +6,99 @@ class MatchesResults extends React.Component {
 
     constructor() {
         super();
-        this.state = { matches: [] }
+        this.state = { 
+            matches: [],
+            week: 1
+        }
+        this.generateNextWeek = this.generateNextWeek.bind(this);
     }
 
     componentDidMount() {
-        // var usersRef = firebase.database().ref('users/');
-        // usersRef.once('value')
-        //     .then(snapshot => this.getMatches(snapshot))
-        //     .then(pairs => {
-        //         this.setState({ pairs: pairs })
-        //     });
-
         var matchesRef = firebase.database().ref('matches/');
         matchesRef.once('value')
             .then(snapshot=> {
-                this.setState({matches : snapshot.val()})
-    });
+                const week = this.calculateWeek(snapshot.val());
+                const matches = Object.entries(snapshot.val())
+                .filter((key, value) => key[1].week === week)
+                .map((key, value) => {
+                    const match = {
+                        matchId : key[0],
+                        player1 : key[1].player1,
+                        player2 : key[1].player2,
+                        player1Score : key[1].player1Score,
+                        player2Score : key[1].player2Score,
+                        alreadyScored : key[1].player1Score && key[1].player1Score
+                    }
+                    return match
+                });
+                this.setState({
+                    matches : matches,
+                    week : week
+                })
+        });
+}
+
+    calculateWeek(matches) {
+        if (Object.entries(matches).length === 0) {
+            return 1;
+        }
+        const weeks = Object.entries(matches).map((key, value) => key[1].week)
+        return Math.max(...weeks)
+    }
+
+    weekNav() {
+        return (
+            <div>
+                {this.weekButton(1)}
+                {this.weekButton(2)}
+                {this.weekButton(3)}
+                {this.weekButton(4)}
+                {this.weekButton(5)}
+            </div>
+        );
+    }
+
+    weekButton(week) {
+        return (
+            <button className={week <= this.state.week  ? "button--primary": ""}>Week{week}</button>
+        )
 
     }
 
-    // getMatches(snapshot) {
-    //     const users = snapshot.val();
-    //     const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
-    //     // console.log('names', names)
-    //     // console.log('no of name', names.length)
-
-    //     if (names.length % 2 !== 0) {
-    //         // alert("You must have an even number of names. You currently have " + names.length + " names.");
-    //     } else {
-
-    //         names.sort(function () { return 0.5 - Math.random(); }); // shuffle array
-
-    //         var pairs = []
-    //         while (names.length) {
-    //             var name1 = names.pop(), // get the last value of names
-    //                 name2 = names.shift(); // get the first value of names
-    //             pairs.push(
-    //                 {
-    //                     player1: name1,
-    //                     player2: name2
-    //                 }
-    //             )
-    //         }
-    //         // console.log(pairs);
-    //         return pairs;
-    //     }
-    // }
+    generateNextWeek() {  
+        var matchesRef = firebase.database().ref('matches/');
+        matchesRef.once('value')
+        .then(snapshot=> {
+            const week = this.calculateWeek(snapshot.val());
+            const matches = Object.entries(snapshot.val())
+            .filter((key, value) => key[1].week === week)
+            .map((key, value) => {
+                const match = {
+                    matchId : key[0],
+                    player1 : key[1].player1,
+                    player2 : key[1].player2,
+                    player1Score : key[1].player1Score,
+                    player2Score : key[1].player2Score,
+                    alreadyScored : key[1].player1Score && key[1].player1Score
+                }
+                return match
+            })
+            this.setState({
+                matches : matches,
+                week : week
+            })
+        });
+}
 
     render() {
         // console.log("pairs ", this.state.pairs)
         return (
             <div>
                 <h1>All Matches and Results</h1>
-                <DisplayMatches matches={this.state.matches} />
+                {this.weekNav()}
+                <DisplayMatches matches={this.state.matches} week={this.state.week} />
+                <br></br>
+                <button onClick={this.generateNextWeek}>All matches played!</button>
             </div>
 
         );

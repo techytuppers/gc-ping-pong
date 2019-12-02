@@ -5,6 +5,8 @@ class DisplayMatch extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            player1: props.match.player1,
+            player2: props.match.player2,
             player1Score: props.match.player1Score,
             player2Score: props.match.player2Score,
             alreadyScored: props.match.alreadyScored
@@ -24,8 +26,11 @@ class DisplayMatch extends React.Component {
         event.preventDefault();
         const matchRef = this.database.ref('matches/' + this.matchId);
         matchRef.set({
+            player1: this.state.player1,
+            player2: this.state.player2,
             player1Score: this.state.player1Score,
             player2Score: this.state.player2Score,
+            alreadyScored: true,
             week: 1
         }).then(() => {
             this.setState({ alreadyScored: true });

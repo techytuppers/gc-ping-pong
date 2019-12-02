@@ -30,6 +30,7 @@ class GenerateTournament extends React.Component {
           newTournamentRef.set({
             player1: pair.player1,
             player2: pair.player2,
+            week: 1
           });
         });
       });
