@@ -1,5 +1,7 @@
 import React from 'react';
 import * as firebase from 'firebase';
+import Matches from './Matches'
+import DisplayMatch from './DisplayMatch'
 
 class SignUp extends React.Component {
 
@@ -13,13 +15,16 @@ class SignUp extends React.Component {
 
     }
 
-    addUser() {
-        console.log('hi')
+    addUser(event) {
+        event.preventDefault();
+        console.log('jenny')
         const newUserRef = this.database.ref('users/').push();
         newUserRef.set({
             firstName: this.state.firstName,
             surname: this.state.surname,
-        }).then(res=> console.log("test", res));
+        }).then(()=> {
+            Matches();
+        });
     }
     
     handleFirstNameChange(event) {
@@ -35,11 +40,14 @@ class SignUp extends React.Component {
 
     render() {
         return (
-            <form className="SignUp" onSubmit={this.addUser}>
-                <input type="text" placeholder="Firstname" value={this.state.firstName} onChange={this.handleFirstNameChange}></input>
-                <input type="text" placeholder="Lastname" value={this.state.surname} onChange={this.handleSurnameChange}></input>
-                <button type="submit">Sign Up</button>
-            </form>
+            <div>
+                <form className="SignUp" onSubmit={this.addUser}>
+                    <input type="text" placeholder="Firstname" value={this.state.firstName} onChange={this.handleFirstNameChange}></input>
+                    <input type="text" placeholder="Lastname" value={this.state.surname} onChange={this.handleSurnameChange}></input>
+                    <button type="submit">Sign Up</button>
+                </form>
+                <DisplayMatch></DisplayMatch>
+            </div>
         );
     }
   }
