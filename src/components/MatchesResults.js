@@ -10,7 +10,7 @@ class MatchesResults extends React.Component {
             matches: [],
             week: 1
         }
-        this.generateNextWeek = this.generateNextWeek.bind(this);
+        // this.generateNextWeek = this.generateNextWeek.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +19,9 @@ class MatchesResults extends React.Component {
             .then(snapshot=> {
                 const week = this.calculateWeek(snapshot.val());
                 const matches = Object.entries(snapshot.val())
-                .filter((key, value) => key[1].week === week)
+                .filter((key, value) => {
+                    return key[1].week === week
+                })
                 .map((key, value) => {
                     const match = {
                         matchId : key[0],
@@ -31,6 +33,8 @@ class MatchesResults extends React.Component {
                     }
                     return match
                 });
+                console.log('setting state week', week)
+                console.log('setting state matches', matches)
                 this.setState({
                     matches : matches,
                     week : week
@@ -62,7 +66,7 @@ class MatchesResults extends React.Component {
         return (
             <button 
                 className={week <= this.state.week  ? "button--primary": ""}
-                onClick={this.setState({week: week})}
+                // onClick={this.setState({week: week})}
             >
                 Week{week}
             </button>
@@ -71,28 +75,28 @@ class MatchesResults extends React.Component {
     }
 
     generateNextWeek() {  
-        var matchesRef = firebase.database().ref('matches/');
-        matchesRef.once('value')
-        .then(snapshot=> {
-            const week = this.calculateWeek(snapshot.val());
-            const matches = Object.entries(snapshot.val())
-            .filter((key, value) => key[1].week === week)
-            .map((key, value) => {
-                const match = {
-                    matchId : key[0],
-                    player1 : key[1].player1,
-                    player2 : key[1].player2,
-                    player1Score : key[1].player1Score,
-                    player2Score : key[1].player2Score,
-                    alreadyScored : key[1].player1Score && key[1].player1Score
-                }
-                return match
-            })
-            this.setState({
-                matches : matches,
-                week : week
-            })
-        });
+        // var matchesRef = firebase.database().ref('matches/');
+        // matchesRef.once('value')
+        // .then(snapshot=> {
+        //     const week = this.calculateWeek(snapshot.val());
+        //     const matches = Object.entries(snapshot.val())
+        //     .filter((key, value) => key[1].week === week)
+        //     .map((key, value) => {
+        //         const match = {
+        //             matchId : key[0],
+        //             player1 : key[1].player1,
+        //             player2 : key[1].player2,
+        //             player1Score : key[1].player1Score,
+        //             player2Score : key[1].player2Score,
+        //             alreadyScored : key[1].player1Score && key[1].player1Score
+        //         }
+        //         return match
+        //     })
+        //     this.setState({
+        //         matches : matches,
+        //         week : week
+        //     })
+        // });
 }
 
     render() {
@@ -100,7 +104,9 @@ class MatchesResults extends React.Component {
         return (
             <div>
                 <h1>All Matches and Results</h1>
+                
                 {this.weekNav()}
+                
                 <DisplayMatches matches={this.state.matches} week={this.state.week} />
                 <br></br>
                 <button onClick={this.generateNextWeek}>All matches played!</button>

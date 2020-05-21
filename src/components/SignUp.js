@@ -31,7 +31,6 @@ class SignUp extends React.Component {
         try {
         usersRef.once('value')
             .then(snapshot=> {
-                console.log('snapshot ', Object.keys(snapshot.val().users).length)
                 return Object.keys(snapshot.val().users).length
             })
             .then(playerCount=> {
