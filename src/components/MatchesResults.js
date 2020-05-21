@@ -81,8 +81,12 @@ class MatchesResults extends React.Component {
         var matchesRef = firebase.database().ref('matches/');
         matchesRef.once('value')
         .then(snapshot=> {
-        //     const week = this.calculateWeek(snapshot.val());
-        //     const groups = this.generateGroups(week, snapshot)
+            const week = this.calculateWeek(snapshot.val());
+            const groups = this.generateGroups(week, snapshot)
+            return groups
+        }).then(groups => {
+            console.log("GROUPS ", groups)
+        })
 
         //     week += 1
         //     // For each group generate pairs
@@ -109,12 +113,27 @@ class MatchesResults extends React.Component {
         //         matches : newMatches,
         //         week : week
         //     })
-        });
     }
 
-    generateGroups(week, snapshot) {
+    async generateGroups(week, snapshot) {
         console.log("week ", week)
         console.log("snapshot ", snapshot.val())
+        var usersRef = firebase.database().ref('users/');
+        return usersRef.once('value')
+        .then(snapshot => {
+            const groups = {}
+            const users = Object.entries(snapshot.val());
+            console.log("users ", users)
+            users.forEach(user=> {
+                console.log("user[1].group", user[1].group)
+                const existingUsers = groups[user[1].group] || []
+                existingUsers.push(user)
+                console.log("existingUsers", existingUsers)
+                groups[user[1].group] = existingUsers      
+            })
+            return groups
+        })
+        
     }
 
     render() {
