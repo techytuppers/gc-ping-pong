@@ -23,9 +23,9 @@ class GenerateTournament extends React.Component {
     // var that = this;
     usersRef.once('value')
       .then(snapshot => {
-        const users = snapshot.val();
-        const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
-        return this.getMatches(names)
+        const users = Object.keys(snapshot.val());
+        console.log("users ", users)
+        return this.getMatches(users)
       })
       .then(pairs => {
         this.database.ref('matches/').remove();
@@ -45,22 +45,22 @@ class GenerateTournament extends React.Component {
 
   }
 
-  getMatches(names) {
+  getMatches(users) {
   
-    if (names.length % 2 !== 0) {
-      alert("You must have an even number of names. You currently have " + names.length + " names.");
+    if (users.length % 2 !== 0) {
+      alert("You must have an even number of names. You currently have " + users.length + " names.");
     } else {
 
-      names.sort(function () { return 0.5 - Math.random(); }); // shuffle array
+      users.sort(function () { return 0.5 - Math.random(); }); // shuffle array
 
       var pairs = []
-      while (names.length) {
-        var name1 = names.pop(); // get the last value of names
-        var name2 = names.pop(); // get the first value of names
+      while (users.length) {
+        var user1 = users.pop(); // get the last value of names
+        var user2 = users.pop(); // get the first value of names
         pairs.push(
           {
-            player1: name1,
-            player2: name2
+            player1: user1,
+            player2: user2
           }
         )
       }

@@ -43,6 +43,9 @@ class MatchesResults extends React.Component {
 }
 
     calculateWeek(matches) {
+        if (!matches) {
+            return 1;
+        }
         if (Object.entries(matches).length === 0) {
             return 1;
         }

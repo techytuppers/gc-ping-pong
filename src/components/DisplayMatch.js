@@ -32,6 +32,21 @@ class DisplayMatch extends React.Component {
 
     }
 
+    componentDidMount(){
+        const player1Promise = this.database.ref('users/' + this.state.player1).once('value');
+        const player2Promise = this.database.ref('users/' + this.state.player2).once('value');
+        Promise.all([player1Promise, player2Promise]).then(snapshots => {
+            console.log(snapshots[0].val())
+            const player1 = snapshots[0].val();
+            const player2 = snapshots[1].val();
+            console.log("player1 ", player1)
+            console.log("player2", player2)
+            this.setState({player1: player1, player2: player2})
+        })
+
+ 
+    }
+
     submitScore(event) {
         event.preventDefault();
         const matchRef = this.database.ref('matches/' + this.matchId);
@@ -45,6 +60,7 @@ class DisplayMatch extends React.Component {
         //         group:
         //     }
         // )
+
         matchRef.set({
             player1: this.state.player1,
             player2: this.state.player2,
@@ -86,13 +102,13 @@ class DisplayMatch extends React.Component {
                         <tbody>
                             <tr>
                                 <td>Player 1</td>
-                                <td>{this.props.match.player1}</td>
+                                <td>{this.state.player1.firstName}</td>
                                 { this.state.alreadyScored ? <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange} disabled ></input></td> :
                                 <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange}></input></td>}
                             </tr>
                             <tr>
                                 <td>Player 2</td>
-                                <td>{this.props.match.player2}</td>
+                                <td>{this.state.player2.firstName}</td>
                                 { this.state.alreadyScored ? <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange} disabled></input></td> :
                                 <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange}></input></td>}
                             </tr>
