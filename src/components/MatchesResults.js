@@ -78,9 +78,9 @@ class MatchesResults extends React.Component {
     }
 
     generateNextWeek() {  
-        // var matchesRef = firebase.database().ref('matches/');
-        // matchesRef.once('value')
-        // .then(snapshot=> {
+        var matchesRef = firebase.database().ref('matches/');
+        matchesRef.once('value')
+        .then(snapshot=> {
         //     const week = this.calculateWeek(snapshot.val());
         //     const groups = this.generateGroups(week, snapshot)
 
@@ -109,27 +109,12 @@ class MatchesResults extends React.Component {
         //         matches : newMatches,
         //         week : week
         //     })
-        // });
+        });
     }
 
     generateGroups(week, snapshot) {
-        // const matches = Object.entries(snapshot.val())
-        // const groups = {}
-        // for (i = 1; i < week; i++) {
-
-        // }
-        // matches.forEach((key, value) => {
-        //     if (key.week < week){
-        //         if (key.week === 0) {
-        //             groups["1"] = key.winner
-        //             groups["2"] = key.loser
-        //         } else {
-
-        //         }
-        //         console.log('matches ', key, value)
-        //     }
-        // });
-        // return groups
+        console.log("week ", week)
+        console.log("snapshot ", snapshot.val())
     }
 
     render() {

@@ -23,14 +23,14 @@ class GenerateTournament extends React.Component {
     // var that = this;
     usersRef.once('value')
       .then(snapshot => {
-        const users = Object.keys(snapshot.val());
-        console.log("users ", users)
+        const users = Object.entries(snapshot.val());
         return this.getMatches(users)
       })
       .then(pairs => {
         this.database.ref('matches/').remove();
         pairs.forEach(pair => {
           const newTournamentRef = this.database.ref('matches/').push();
+          console.log("pair.player1 ", pair.player1)
           newTournamentRef.set({
             player1: pair.player1,
             player2: pair.player2,
