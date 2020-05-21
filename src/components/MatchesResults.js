@@ -10,7 +10,7 @@ class MatchesResults extends React.Component {
             matches: [],
             week: 1
         }
-        // this.generateNextWeek = this.generateNextWeek.bind(this);
+        this.generateNextWeek = this.generateNextWeek.bind(this);
     }
 
     componentDidMount() {
@@ -79,7 +79,17 @@ class MatchesResults extends React.Component {
         // matchesRef.once('value')
         // .then(snapshot=> {
         //     const week = this.calculateWeek(snapshot.val());
-        //     const matches = Object.entries(snapshot.val())
+        //     const groups = this.generateGroups(week, snapshot)
+
+        //     week += 1
+        //     // For each group generate pairs
+        //     // For each pair generate a new match
+        //     // matchesRef.set({
+        //     //     player1:
+        //     //     player2:
+        //     //     week: week
+        //     // })
+        //     const newMatches = Object.entries(snapshot.val())
         //     .filter((key, value) => key[1].week === week)
         //     .map((key, value) => {
         //         const match = {
@@ -93,11 +103,31 @@ class MatchesResults extends React.Component {
         //         return match
         //     })
         //     this.setState({
-        //         matches : matches,
+        //         matches : newMatches,
         //         week : week
         //     })
         // });
-}
+    }
+
+    generateGroups(week, snapshot) {
+        // const matches = Object.entries(snapshot.val())
+        // const groups = {}
+        // for (i = 1; i < week; i++) {
+
+        // }
+        // matches.forEach((key, value) => {
+        //     if (key.week < week){
+        //         if (key.week === 0) {
+        //             groups["1"] = key.winner
+        //             groups["2"] = key.loser
+        //         } else {
+
+        //         }
+        //         console.log('matches ', key, value)
+        //     }
+        // });
+        // return groups
+    }
 
     render() {
         // console.log("pairs ", this.state.pairs)

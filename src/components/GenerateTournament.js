@@ -22,7 +22,11 @@ class GenerateTournament extends React.Component {
     var usersRef = this.database.ref('users/');
     // var that = this;
     usersRef.once('value')
-      .then(snapshot => this.getMatches(snapshot))
+      .then(snapshot => {
+        const users = snapshot.val();
+        const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
+        return this.getMatches(names)
+      })
       .then(pairs => {
         this.database.ref('matches/').remove();
         pairs.forEach(pair => {
@@ -38,13 +42,11 @@ class GenerateTournament extends React.Component {
   }
 
   purgeTournament() {
-    
+
   }
 
-  getMatches(snapshot) {
-    const users = snapshot.val();
-    const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
-
+  getMatches(names) {
+  
     if (names.length % 2 !== 0) {
       alert("You must have an even number of names. You currently have " + names.length + " names.");
     } else {

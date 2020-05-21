@@ -1,6 +1,16 @@
 import React from 'react';
 import * as firebase from 'firebase';
 
+const groupsMap = {
+    1 : {
+        winner: "A",
+        loser: "B"
+    },
+    2 : {
+
+    }
+}
+
 class DisplayMatch extends React.Component {
     constructor(props){
         super(props);
@@ -25,6 +35,16 @@ class DisplayMatch extends React.Component {
     submitScore(event) {
         event.preventDefault();
         const matchRef = this.database.ref('matches/' + this.matchId);
+        // const winner = this.state.player1Score > this.state.player2Score ? this.state.player1 : this.state.player2;
+        // const loser = this.state.player1Score < this.state.player2Score ? this.state.player1 : this.state.player2;
+        // const outcome = {winner: winner, loser: loser}
+        // const groupsRef = this.database.ref('groups/').push();
+        // groupsRef.set(
+        //     {
+        //         player: player1,
+        //         group:
+        //     }
+        // )
         matchRef.set({
             player1: this.state.player1,
             player2: this.state.player2,
@@ -50,8 +70,8 @@ class DisplayMatch extends React.Component {
 
 
     render(props) {
-        console.log('props ', props)
-        console.log('this.props ', this.props)
+        // console.log('props ', props)
+        // console.log('this.props ', this.props)
         return (
             <div>
                 <form>
