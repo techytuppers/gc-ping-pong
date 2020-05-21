@@ -37,5 +37,5 @@ export default function App() {
 }
 
 function Home() {
-  return <h2>Test</h2>;
+  return <h2>This is the homepage</h2>;
 }

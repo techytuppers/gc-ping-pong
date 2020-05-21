@@ -60,7 +60,12 @@ class MatchesResults extends React.Component {
 
     weekButton(week) {
         return (
-            <button className={week <= this.state.week  ? "button--primary": ""}>Week{week}</button>
+            <button 
+                className={week <= this.state.week  ? "button--primary": ""}
+                onClick={this.setState({week: week})}
+            >
+                Week{week}
+            </button>
         )
 
     }

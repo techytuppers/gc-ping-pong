@@ -27,10 +27,21 @@ class SignUp extends React.Component {
     }
 
     componentDidMount() {
-        var usersRef = firebase.database().ref('users/');
+        var usersRef = firebase.database().ref();
+        try {
         usersRef.once('value')
-            .then(snapshot=> Object.keys(snapshot.val()).length)
-            .then(playerCount=> this.setState({playerCount: playerCount}))
+            .then(snapshot=> {
+                console.log('snapshot ', Object.keys(snapshot.val().users).length)
+                return Object.keys(snapshot.val().users).length
+            })
+            .then(playerCount=> {
+                console.log('set state ', playerCount)
+                return this.setState({playerCount: playerCount})
+            })
+        } catch (err) {
+            console.log(err)
+        }
+        
     }
 
     addUser(event) {

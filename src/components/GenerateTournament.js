@@ -37,12 +37,16 @@ class GenerateTournament extends React.Component {
     
   }
 
+  purgeTournament() {
+    
+  }
+
   getMatches(snapshot) {
     const users = snapshot.val();
     const names = Object.values(users).map(user => user.firstName).filter(name => !!name)
 
     if (names.length % 2 !== 0) {
-      // alert("You must have an even number of names. You currently have " + names.length + " names.");
+      alert("You must have an even number of names. You currently have " + names.length + " names.");
     } else {
 
       names.sort(function () { return 0.5 - Math.random(); }); // shuffle array
@@ -73,7 +77,7 @@ class GenerateTournament extends React.Component {
         </Wrapper>
         <Wrapper>
           <h2>Purge all users</h2>
-          <button className="button button--primary">Go!</button>
+          <button onClick={this.purgeTournament} className="button button--primary">Go!</button>
         </Wrapper>
       </div>
 
