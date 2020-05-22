@@ -28,7 +28,6 @@ class SignUp extends React.Component {
 
     componentDidMount() {
         var usersRef = firebase.database().ref();
-        try {
         usersRef.once('value')
             .then(snapshot=> {
                 return Object.keys(snapshot.val().users).length
@@ -37,9 +36,7 @@ class SignUp extends React.Component {
                 console.log('set state ', playerCount)
                 return this.setState({playerCount: playerCount})
             })
-        } catch (err) {
-            console.log(err)
-        }
+            .catch(err=> console.log(err))
         
     }
 
@@ -51,6 +48,7 @@ class SignUp extends React.Component {
         newUserRef.set({
             firstName: this.state.firstName,
             surname: this.state.surname,
+            group: "A"
         }).then(() => {
             this.setState({ success: true, playerCount: this.state.playerCount + 1 });
 
@@ -69,6 +67,19 @@ class SignUp extends React.Component {
 
     handleSurnameChange(event) {
         this.setState({ surname: event.target.value });
+    }
+
+    create8Users() {
+        const users = ["test1", "test2", "test3", "test4", "alice", "bob", "claire", "dan"]
+        users.forEach(user => {
+            const newUserRef = firebase.database().ref('users/').push();
+            newUserRef.set({
+                firstName: user,
+                surname: user,
+                group: "A"
+            })
+        })
+        
     }
 
 
@@ -92,6 +103,7 @@ class SignUp extends React.Component {
                     <label for="lastName">Last name</label>
                     <FormInput id="lastName" type="text" value={this.state.surname} onChange={this.handleSurnameChange}></FormInput>
                     <button className="button button--primary" type="submit">Join the Tournament</button>
+                    <button onClick={this.create8Users}>Create 8 Random Users</button>
                 </form>}
             </div>
 

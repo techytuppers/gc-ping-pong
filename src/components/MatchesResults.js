@@ -14,6 +14,10 @@ class MatchesResults extends React.Component {
     }
 
     componentDidMount() {
+        this.resetMatches()
+    }
+
+    resetMatches() {
         var matchesRef = firebase.database().ref('matches/');
         matchesRef.once('value')
             .then(snapshot=> {
@@ -34,13 +38,13 @@ class MatchesResults extends React.Component {
                     return match
                 });
                 console.log('setting state week', week)
-                console.log('setting state matches', matches)
+                console.log('XXX setting state matches', matches)
                 this.setState({
                     matches : matches,
                     week : week
                 })
-        });
-}
+        }).catch(err => console.log(err));
+    }
 
     calculateWeek(matches) {
         if (!matches) {
@@ -86,16 +90,34 @@ class MatchesResults extends React.Component {
             return groups
         }).then(groups => {
             console.log("GROUPS ", groups)
+            // For each group generate pairs
+            var pairs;
+            Object.values(groups).forEach(users => {
+                // console.log('groups ', groups)
+                console.log('users ',users)
+                pairs = this.getMatches(users)
+                // For each pair generate a new match
+                pairs.map(pair => this.createNewMatch(pair));
+                Promise.all(pairs).then(() => this.resetMatches())
+            })
+            
+            
+        
         })
+    }
 
-        //     week += 1
-        //     // For each group generate pairs
-        //     // For each pair generate a new match
-        //     // matchesRef.set({
-        //     //     player1:
-        //     //     player2:
-        //     //     week: week
-        //     // })
+    createNewMatch(pair){
+        const newMatchRef = firebase.database().ref('matches/').push();
+                console.log("pair.player1 ", pair.player1)
+                
+                return newMatchRef.set({
+                    player1: pair.player1,
+                    player2: pair.player2,
+                    week: this.state.week + 1
+                });
+    }
+
+       
         //     const newMatches = Object.entries(snapshot.val())
         //     .filter((key, value) => key[1].week === week)
         //     .map((key, value) => {
@@ -113,22 +135,48 @@ class MatchesResults extends React.Component {
         //         matches : newMatches,
         //         week : week
         //     })
-    }
+
+
+
+    // copied from generatetournament
+    getMatches(users) {
+        console.log("users ", users)
+        if (users.length % 2 !== 0) {
+          alert("You must have an even number of names. You currently have " + users.length + " names.");
+        } else {
+    
+          users.sort(function () { return 0.5 - Math.random(); }); // shuffle array
+    
+          var pairs = []
+          while (users.length) {
+            var user1 = users.pop(); // get the last value of names
+            var user2 = users.pop(); // get the first value of names
+            pairs.push(
+              {
+                player1: user1,
+                player2: user2
+              }
+            )
+          }
+          console.log(pairs);
+          return pairs;
+        }
+      }
 
     async generateGroups(week, snapshot) {
-        console.log("week ", week)
-        console.log("snapshot ", snapshot.val())
+        // console.log("week ", week)
+        // console.log("snapshot ", snapshot.val())
         var usersRef = firebase.database().ref('users/');
         return usersRef.once('value')
         .then(snapshot => {
             const groups = {}
             const users = Object.entries(snapshot.val());
-            console.log("users ", users)
+            // console.log("users ", users)
             users.forEach(user=> {
                 console.log("user[1].group", user[1].group)
                 const existingUsers = groups[user[1].group] || []
                 existingUsers.push(user)
-                console.log("existingUsers", existingUsers)
+                // console.log("existingUsers", existingUsers)
                 groups[user[1].group] = existingUsers      
             })
             return groups
@@ -137,6 +185,8 @@ class MatchesResults extends React.Component {
     }
 
     render() {
+        console.log("XXX this.state.matches", this.state.matches)
+        console.log("this.state.week", this.state.week)
         // console.log("pairs ", this.state.pairs)
         return (
             <div>

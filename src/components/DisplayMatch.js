@@ -4,8 +4,10 @@ import * as firebase from 'firebase';
 // Week -> group last week -> outcome -> group next week -> position
 const groupsMap = {
     1 : {
-        win: "A",
-        lose: "B"
+        A : {
+            win: "A",
+            lose: "B"
+        }
     },
     2 : {
         A: {
@@ -76,21 +78,25 @@ class DisplayMatch extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            player1: props.match.player1,
-            player2: props.match.player2,
-            player1Score: props.match.player1Score,
-            player2Score: props.match.player2Score,
-            alreadyScored: props.match.alreadyScored,
+            player1: props.player1,
+            player2: props.player2,
+            player1Score: props.player1Score,
+            player2Score: props.player2Score,
+            alreadyScored: props.alreadyScored,
             week: props.week
         }
-        this.matchId = props.match.matchId;
+        console.log('XXX props.player1Score ', props.player1Score)
+        this.matchId = props.matchId;
         this.database = firebase.database();
         this.handlePlayer1ScoreChange = this.handlePlayer1ScoreChange.bind(this);
         this.handlePlayer2ScoreChange = this.handlePlayer2ScoreChange.bind(this);
         this.submitScore = this.submitScore.bind(this);
+        this.player1Input = React.createRef();
+        this.player2Input = React.createRef();
 
 
-        console.log("this.state.player1 ", this.state.player1)
+
+        console.log("XXX this.state.player1 ", this.state.player1)
 
     }
 
@@ -109,20 +115,38 @@ class DisplayMatch extends React.Component {
  
     }
 
+    componentWillReceiveProps(){
+        this.setState({
+            player1: this.props.player1,
+            player2: this.props.player2,
+            player1Score: this.props.player1Score,
+            player2Score: this.props.player2Score,
+            alreadyScored: this.props.alreadyScored,
+            week: this.props.week
+        })
+        this.player1Input.value = ""
+        this.player2Input.value = ""
+    }
+
     submitScore(event) {
         event.preventDefault();
         console.log( this.state.player1)
         const matchRef = this.database.ref('matches/' + this.matchId);
         const player1Ref = this.database.ref('users/' + this.state.player1[0]);
         const player2Ref = this.database.ref('users/' + this.state.player2[0]);
-        const winGroup = groupsMap[String(this.state.week)].win
-        const loseGroup = groupsMap[String(this.state.week)].lose
-
+        console.log("this.state.week ", this.state.week)
+        console.log(groupsMap[String(this.state.week)])
+        const player1Group = this.state.player1[1].group
+        const player2Group = this.state.player2[1].group
+        const player1WinGroup = groupsMap[String(this.state.week)][player1Group]["win"]
+        const player2WinGroup = groupsMap[String(this.state.week)][player2Group]["win"] 
+        const player1LoseGroup = groupsMap[String(this.state.week)][player1Group]["lose"]
+        const player2LoseGroup = groupsMap[String(this.state.week)][player2Group]["lose"]
         player1Ref.update({
-            group : this.state.player1Score > this.state.player2Score ? winGroup : loseGroup
+            group : this.state.player1Score > this.state.player2Score ? player1WinGroup : player1LoseGroup
         })
         player2Ref.update({
-            group : this.state.player1Score < this.state.player2Score ? winGroup : loseGroup
+            group : this.state.player1Score < this.state.player2Score ? player2WinGroup : player2LoseGroup
         })
 
         // const outcome = {winner: winner, loser: loser}
@@ -155,9 +179,12 @@ class DisplayMatch extends React.Component {
     }
 
 
-    render(props) {
+    render() {
         // console.log('props ', props)
         // console.log('this.props ', this.props)
+        console.log("XXX render this.state.player1Score ", this.state.player1Score)
+        console.log("XXX this.props.player1Score ", this.props.player1Score)
+        // this.state = this.props
         return (
             <div>
                 <form>
@@ -173,14 +200,14 @@ class DisplayMatch extends React.Component {
                             <tr>
                                 <td>Player 1</td>
                                 <td>{this.state.player1[1].firstName}</td>
-                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange} disabled ></input></td> :
-                                <td><input type="text" value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange}></input></td>}
+                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player1Score} disabled ></input></td> :
+                                <td><input type="text" ref={this.player1Input} value={this.state.player1Score} onChange={this.handlePlayer1ScoreChange}></input></td>}
                             </tr>
                             <tr>
                                 <td>Player 2</td>
                                 <td>{this.state.player2[1].firstName}</td>
-                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange} disabled></input></td> :
-                                <td><input type="text" value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange}></input></td>}
+                                { this.state.alreadyScored ? <td><input type="text" value={this.state.player2Score} disabled></input></td> :
+                                <td><input type="text" ref={this.player2Input} value={this.state.player2Score} onChange={this.handlePlayer2ScoreChange}></input></td>}
                             </tr>
                         </tbody>
                         
